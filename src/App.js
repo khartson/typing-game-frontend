@@ -1,25 +1,39 @@
-import logo from './logo.svg';
 import './App.css';
+import TypingTest from './components/TypingTest';
+import Login from './components/Login';
+import { useState } from 'react'; 
 
 function App() {
+  
+  const [user, setUser] = useState(null); 
+
+  const changeUser = (user) => {
+    setUser(user); 
+  }
+
+  const updateUserTests = (test) => {
+    const updatedTests = [...user['tests'], test]
+    setUser({...user,
+             tests: updatedTests})
+  }
+
+  const updateStarredTest = (updatedTest) => {
+    console.log(updatedTest)
+    const updatedTests = user['tests'].map((test)=>{
+      if (test['id'] === updatedTest['id']) {
+        return updatedTest
+      } else {
+        return test; 
+      }
+    });
+    setUser({...user,
+             tests: updatedTests})
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <h1 className='text-3xl font-bold underline'>
-          Hello World!
-        </h1>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {!user?<Login changeUser={changeUser}/>:<TypingTest onStarredTest={updateStarredTest} onCompletion={updateUserTests} user={user}/>}
       </header>
     </div>
   );

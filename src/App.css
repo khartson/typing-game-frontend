@@ -1,5 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap');
+
 .App {
   text-align: center;
+  font-family: 'Comfortaa';
 }
 
 .App-logo {
