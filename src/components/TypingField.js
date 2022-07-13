@@ -1,3 +1,6 @@
+// TypingField
+// handles the dynamic elements of the text displayed to the user 
+// and the logic of a typing test. mainly through the typing-game-hook
 function TypingField({text, handleKey, charsState, currIndex, }){
 
     return (
@@ -14,7 +17,7 @@ function TypingField({text, handleKey, charsState, currIndex, }){
           { 
             text.split("").map((char, index) => {
             let state = charsState[index];
-            let color = state === 0 ? "white" : state === 1 ? "silver" : "red";
+            let color = state === 0 ? "white" : state === 1 ? "silver" : "red"; {/* sets the color of the curr character based on its state from the hook*/}
             return (
               <span
                 key={char + index}

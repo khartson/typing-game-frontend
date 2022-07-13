@@ -1,6 +1,15 @@
-function UserRecords({ tests, onStarredTest }) {
+import { useState } from 'react'; 
+import { Switch } from '@headlessui/react'
 
+function UserRecords({ tests, onStarredTest, onDeleteTest }) {
 
+  const [enabled, setEnabled] = useState(false)
+  // onStar
+  // Takes a user test and updates it in both database and state
+  // makes patch request to backend, updating the starred property
+  // of a test result
+  // users can now filter by whether a result has been starred 
+  // or not 
   function onStar(test) {
     fetch(`http://localhost:9292/tests/${test['id']}`, {
       method: 'PATCH',
@@ -15,14 +24,33 @@ function UserRecords({ tests, onStarredTest }) {
       .then((updatedTest)=>onStarredTest(updatedTest))
   }
 
-  function onDelete(id) {
-    console.log(id)
+  // onDelete
+  // Deletes a record of a test from the database
+  // returns this result and then deletes from state
+  // so test is no longer displayed in the 'results' 
+  // table
+  function onDelete(test) {
+    fetch(`http://localhost:9292/tests/${test['id']}`, {
+      method: 'DELETE' 
+    })
+      .then((r)=>r.json())
+      .then((deletedTest)=>onDeleteTest(deletedTest))
   }
 
+  // testItems (component) 
+  // Did not import as separate component as it relies on test results
+  // displays the id, length (chars), wpm, errors, as well as buttons 
+  // to star and delete the entry
+  // edited table template from tailwindcss, 
   function testItems(tests) {
+    const testsToDisplay = (tests, enabled) => {
+      if (enabled) {
+        return tests.filter((test)=>test['starred']===true)
+      } else 
+        return tests.slice(Math.max(tests.length-5,0))
+    }
     return(
-      tests.slice(tests.length-5).reverse().map((test)=>{
-        console.log(test['starred']);
+      testsToDisplay(tests, enabled).reverse().map((test)=>{
         return(
               <tr id={test['id']} key={test['id']} className="border-b dark:border-gray-700">
                   <th className="px-6 py-4">
@@ -57,13 +85,33 @@ function UserRecords({ tests, onStarredTest }) {
     )
   }
 
-
-  if (tests) return (
+  // Switch component + formatting from @headless-ui docs
+  return (
     <>
     <div className='py-4'></div>
     <div className="relative shadow-md sm:rounded-lg">
     
-    <span className='text-xl'>results</span>
+    <div className='grid grid-cols-3'>
+    <span className='text-xl col-start-2'>results</span>
+    <Switch.Group>
+      <div className="flex items-center col-start-3">
+        <Switch.Label className="mr-4 text-sm"></Switch.Label>
+        <Switch
+          checked={enabled}
+          onChange={setEnabled}
+          className={`${
+            enabled ? 'bg-blue-600' : 'bg-gray-200'
+          } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+        >
+          <span
+            className={`${
+              enabled ? 'translate-x-6' : 'translate-x-1'
+            } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+          />
+        </Switch>
+      </div>
+    </Switch.Group>
+    </div>
 
     <table className="w-full text-sm text-center">
         <thead className="text-xs uppercase">
@@ -86,11 +134,12 @@ function UserRecords({ tests, onStarredTest }) {
             </tr>
         </thead>
         <tbody>
-          {tests?testItems(tests):'no'}
+          {testItems(tests)}
         </tbody>
     </table>
     </div>
     </>
+    
   )
 
 }

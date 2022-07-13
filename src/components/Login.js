@@ -1,8 +1,20 @@
 import { useState } from 'react'; 
+
+// Login
+// first page a usser will see - prompts user for username
+// (no password), and then checks the database OR creates a
+// new user depending on whether the query exists or not
 function Login({user, changeUser}) {
 
+  // controlled form submission
+  // updates user and adds/searches database
   const [username, setUsername] = useState('');
 
+  // prompts a username-only login
+  // upon username entry, a post request is made 
+  // triggering a find_or_create_by method call 
+  // on the backend. the returned result is set 
+  // as the current logged in user + tests
   function handleSubmit(e) {
     e.preventDefault()
     fetch(`http://localhost:9292/users`, {
