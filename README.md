@@ -16,7 +16,8 @@ to get the database running.
 Most of the game's logic is handled by jokarz's [react-typing-game hook](https://www.npmjs.com/package/react-typing-game-hook)  
 
 Styling was handled with react styles as well as [Tailwind CSS](https://tailwindcss.com), featuring components from  
-[headless-ui](https://headlessui.com) and additional icons from [heroicons](https://heroicons.com). 
+[headless-ui](https://headlessui.com) and additional icons from [heroicons](https://heroicons.com). Text for the typing tests is  
+randomly generated using [faker-js](https://fakerjs.dev). 
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). 
